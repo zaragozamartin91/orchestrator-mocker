@@ -1,4 +1,4 @@
-group 'mz.ex.repo'
+group 'ast.mock.orchestrator'
 version '1.0-SNAPSHOT'
 
 buildscript {
@@ -14,44 +14,104 @@ buildscript {
 apply plugin: "com.jfrog.artifactory"
 
 artifactory {
-    contextUrl = 'http://srvcs-desa:8089/artifactory'   //The base Artifactory URL if not overridden by the publisher/resolver
+    contextUrl = 'http://srvcs-desa:8089/artifactory'
+    //The base Artifactory URL if not overridden by the publisher/resolver
+
+    publish {
+        contextUrl = 'http://srvcs-desa:8089/artifactory'   //The base Artifactory URL for the publisher
+        //A closure defining publishing information
+        repository {
+            repoKey = 'ext-snapshot-local'   //The Artifactory repository key to publish to
+            username = 'admin'              //The publisher user name
+            password = 'password*'          //The publisher password
+            maven = true
+        }
+
+    }
 
     resolve {
         contextUrl = 'http://srvcs-desa:8089/artifactory'   //The base Artifactory URL for the resolver
         repository {
             repoKey = 'libs-release'
-            username = 'admin'       //Optional resolver user name (leave out to use anonymous resolution)
-            password = 'password'   //The resolver password
-            maven = true             //Resolve Maven-style artifacts and descriptors (true by default)
-
+            username = 'admin'          //Optional resolver user name (leave out to use anonymous resolution)
+            password = 'password'       //The resolver password
+            maven = true                //Resolve Maven-style artifacts and descriptors (true by default)
         }
     }
 }
 
 apply plugin: 'java'
+apply plugin: 'maven-publish'
 
-sourceCompatibility = 1.8
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
 
 repositories {
     maven {
         credentials {
-            username='admin'
-            password='password'
+            username = 'admin'
+            password = 'password'
         }
         url 'http://srvcs-desa:8089/artifactory/libs-release'
     }
 
-
 //    maven {
 //        url "http://jcenter.bintray.com"
 //    }
+
+    mavenLocal()
+
 }
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
     compile 'org.mockito:mockito-core:2.8.47'
-    compile 'ast.csp.orchestration:ast-csp-orchestration-base:2.0.0'
-    compile 'com.cobiscorp.cobis.cts:cts-commons:1.0.7'
+//    compile 'com.cobiscorp.cobis:cobis-commons:1.0.2'
+//    compile 'com.cobiscorp.cobis.cis:sp-java-orchestration-base-simple:1.0.0'
+//    compile 'ast.csp.orchestration:ast-csp-orchestration-base:2.0.0'
+//    compile 'com.cobiscorp.cobis.cts:cts-commons:1.0.7'
+
     compile 'com.cobiscorp.cobis:cobis-commons:1.0.1'
+    compile 'com.cobiscorp.cobis.cts:cts-commons:1.0.7'
+    compile 'com.cobiscorp.cobis.csp:csp-commons:1.0.3'
+    compile 'com.cobiscorp.cobis.cts:cts-services:1.0.6'
+    compile 'dom4j:dom4j:1.6.1'
+    compile 'cobis:cobis-crypt-api:1.0.0'
+    compile 'cobis:cobis-crypt-impl:1.0.0'
+    compile 'cobis:cobis-crypt-native:1.0.0'
+    compile 'ast.csp.orchestration:ast-csp-orchestration-base:2.0.0'
+
+//    compile 'com.cobiscorp.cobis.cis:sp-java-orchestration-base-simple:1.0.0'
+
+    /* Se eliminan las dependencias transitivas para esta dependencia dado que la misma depende de una version
+     * de cobis-commons que no se encuentra (1.0.3) */
+    compile('com.cobiscorp.cobis.cis:sp-java-orchestration-base-simple:1.0.0') {
+        transitive = false
+    }
 }
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+artifactoryPublish {
+    skip = false //Skip build info analysis and publishing (false by default)
+    contextUrl = 'http://srvcs-desa:8089/artifactory'
+
+    publications ('mavenJava')
+
+    clientConfig.publisher.repoKey = 'ext-snapshot-local'
+    clientConfig.publisher.username = 'admin'
+    clientConfig.publisher.password = 'password'
+
+
+}
+artifactoryPublish.dependsOn(jar)
+
+
