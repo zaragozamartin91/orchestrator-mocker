@@ -92,10 +92,18 @@ dependencies {
     }
 }
 
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
+
+            artifact sourceJar {
+                classifier "sources"
+            }
         }
     }
 }
@@ -104,7 +112,7 @@ artifactoryPublish {
     skip = false //Skip build info analysis and publishing (false by default)
     contextUrl = 'http://srvcs-desa:8089/artifactory'
 
-    publications ('mavenJava')
+    publications('mavenJava')
 
     clientConfig.publisher.repoKey = 'ext-snapshot-local'
     clientConfig.publisher.username = 'admin'
@@ -112,6 +120,9 @@ artifactoryPublish {
 
 
 }
+
+jar.dependsOn(sourceJar)
+
 artifactoryPublish.dependsOn(jar)
 
 
