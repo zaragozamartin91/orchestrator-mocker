@@ -34,10 +34,14 @@ public class ResultSetHeaderStub implements IResultSetHeader {
 		List<IResultSetHeaderColumn> cols = new ArrayList<IResultSetHeaderColumn>();
 		int idx = 0;
 		while (idx < columns.length) {
-			String name = (String) columns[idx++];
-			int type = (Integer) columns[idx++];
-			int length = (Integer) columns[idx++];
-			cols.add(ResultSetHeaderColumnStub.build(name, type, length));
+			try {
+				String name = (String) columns[idx++];
+				int type = (Integer) columns[idx++];
+				int length = (Integer) columns[idx++];
+				cols.add(ResultSetHeaderColumnStub.build(name, type, length));
+			} catch (ClassCastException e) {
+				throw new IllegalArgumentException("Los argumentos no son del tipo correcto! Deben ser [String,int,int,...,String,int,int]");
+			}
 		}
 
 		return new ResultSetHeaderStub(cols);
@@ -48,7 +52,8 @@ public class ResultSetHeaderStub implements IResultSetHeader {
 	}
 
 	public IResultSetHeaderColumn getColumnMetaData(int i) {
-		return cols.get(i);
+		if(i <= 0) throw new IllegalArgumentException("El indice comienza en 1");
+		return cols.get(i - 1);
 	}
 
 	public void addColumnMetaData(IResultSetHeaderColumn iResultSetHeaderColumn) {
