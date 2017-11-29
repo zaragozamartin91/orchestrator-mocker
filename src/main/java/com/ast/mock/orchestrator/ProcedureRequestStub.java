@@ -14,6 +14,8 @@ public class ProcedureRequestStub implements IProcedureRequest {
 	Map<String, IProcedureRequestParam> procedureRequestParamMap = new HashMap<String, IProcedureRequestParam>();
 	Map<String, IHeaderField> headerFieldMap = new HashMap<String, IHeaderField>();
 
+	public ProcedureRequestStub() { }
+
 	public IProcedureRequestParam readParam(String paramName) {
 		return procedureRequestParamMap.get(paramName);
 	}

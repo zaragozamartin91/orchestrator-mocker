@@ -24,6 +24,4 @@ public class Mocker {
 		return procedureRequest;
 	}
 
-	public OrchestratorStub orchestrator(Orchestrator orch) { return OrchestratorStub.buildNewSpy(orch); }
-
 }
