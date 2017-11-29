@@ -13,28 +13,34 @@ buildscript {
 }
 apply plugin: "com.jfrog.artifactory"
 
+
+def ARTIFACTORY_BASE_URL = 'http://srvcs-desa:8089/artifactory'
+def ARTIFACTORY_USERNAME = 'admin'
+def ARTIFACTORY_PASSWORD = 'password'
+
+/* Configuro artifactory para la resolucion de dependencias y para el deploy de artefactos */
 artifactory {
-    contextUrl = 'http://srvcs-desa:8089/artifactory'
+    contextUrl = ARTIFACTORY_BASE_URL
     //The base Artifactory URL if not overridden by the publisher/resolver
 
     publish {
-        contextUrl = 'http://srvcs-desa:8089/artifactory'   //The base Artifactory URL for the publisher
+        contextUrl = ARTIFACTORY_BASE_URL   //The base Artifactory URL for the publisher
         //A closure defining publishing information
         repository {
             repoKey = 'ext-snapshot-local'   //The Artifactory repository key to publish to
-            username = 'admin'              //The publisher user name
-            password = 'password*'          //The publisher password
+            username = ARTIFACTORY_USERNAME           //The publisher user name
+            password = ARTIFACTORY_PASSWORD          //The publisher password
             maven = true
         }
 
     }
 
     resolve {
-        contextUrl = 'http://srvcs-desa:8089/artifactory'   //The base Artifactory URL for the resolver
+        contextUrl = ARTIFACTORY_BASE_URL   //The base Artifactory URL for the resolver
         repository {
             repoKey = 'libs-release'
-            username = 'admin'          //Optional resolver user name (leave out to use anonymous resolution)
-            password = 'password'       //The resolver password
+            username = ARTIFACTORY_USERNAME          //Optional resolver user name (leave out to use anonymous resolution)
+            password = ARTIFACTORY_PASSWORD       //The resolver password
             maven = true                //Resolve Maven-style artifacts and descriptors (true by default)
         }
     }
@@ -50,10 +56,10 @@ targetCompatibility = 1.6
 repositories {
     maven {
         credentials {
-            username = 'admin'
-            password = 'password'
+            username = ARTIFACTORY_USERNAME
+            password = ARTIFACTORY_PASSWORD
         }
-        url 'http://srvcs-desa:8089/artifactory/libs-release'
+        url "${ARTIFACTORY_BASE_URL}/libs-release"
     }
 
 //    maven {
@@ -90,12 +96,16 @@ dependencies {
     compile('com.cobiscorp.cobis.cis:sp-java-orchestration-base-simple:1.0.0') {
         transitive = false
     }
+
+
 }
 
+/* Defino un task para crear un jar que contenga el codigo fuente */
 task sourceJar(type: Jar) {
     from sourceSets.main.allJava
 }
 
+/* Configuro la publicacion de los componentes en artifactory */
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -110,13 +120,13 @@ publishing {
 
 artifactoryPublish {
     skip = false //Skip build info analysis and publishing (false by default)
-    contextUrl = 'http://srvcs-desa:8089/artifactory'
+    contextUrl = ARTIFACTORY_BASE_URL
 
     publications('mavenJava')
 
     clientConfig.publisher.repoKey = 'ext-snapshot-local'
-    clientConfig.publisher.username = 'admin'
-    clientConfig.publisher.password = 'password'
+    clientConfig.publisher.username = ARTIFACTORY_USERNAME
+    clientConfig.publisher.password = ARTIFACTORY_PASSWORD
 
 
 }

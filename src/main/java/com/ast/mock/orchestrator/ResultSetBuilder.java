@@ -26,7 +26,7 @@ public class ResultSetBuilder {
 	 * name , type, length,name , type, length,name , type, length,name , type, length,name , type, length,...
 	 * Cada trio de valores representa una columna.
 	 *
-	 * @param columns Definiciones de columna.
+	 * @param columns Caracteristicas del encabezado agrupadas de a 3 (nombre, tipo, longitud) [String,int,int].
 	 * @return this.
 	 */
 	public ResultSetBuilder withMetadata(Object... columns) {

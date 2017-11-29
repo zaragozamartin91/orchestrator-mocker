@@ -51,10 +51,19 @@ public class ResultSetBuilderTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testBuildAndFailForWrongArguments() {
+	public void testBuildAndFailForWrongMetadataArgumentsType() {
 		ResultSetBuilder.buildNew()
 				.withMetadata(
 						"col_1", "12", 5
+				)
+				.build();
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testBuildAndFailForWrongMetadataArgumentsCount() {
+		ResultSetBuilder.buildNew()
+				.withMetadata(
+						"col_1", 12, 5, 6
 				)
 				.build();
 	}
