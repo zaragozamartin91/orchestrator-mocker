@@ -1,6 +1,7 @@
 package com.ast.mock.orchestrator;
 
-import com.ast.orchestration.base.impl.Orchestrator;
+import com.ast.mock.orchestrator.stub.ProcedureRequestStub;
+import com.ast.mock.orchestrator.stub.ResultSetDataStub;
 import com.cobiscorp.cobis.cts.domains.IProcedureRequest;
 import com.cobiscorp.cobis.cts.domains.sp.IResultSetRow;
 

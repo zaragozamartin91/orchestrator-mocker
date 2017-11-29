@@ -1,5 +1,6 @@
 package com.ast.mock.orchestrator;
 
+import com.ast.mock.orchestrator.stub.ProcedureRequestStub;
 import com.ast.orchestration.base.data.ConnectorData;
 import com.ast.orchestration.base.data.CustomResponse;
 import com.ast.orchestration.base.impl.Orchestrator;
@@ -60,6 +61,8 @@ public class OrchestratorMockerTest {
 				.stubInitProcedureRequestMulti(req_1, req_2)
 				.get();
 
+		Assert.assertEquals(req_1, orchestrator.initProcedureRequest(req_1));
+		Assert.assertEquals(req_2, orchestrator.initProcedureRequest(req_2));
 	}
 
 	@Test

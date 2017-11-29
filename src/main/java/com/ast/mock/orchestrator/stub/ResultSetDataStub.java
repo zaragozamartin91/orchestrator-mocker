@@ -1,4 +1,4 @@
-package com.ast.mock.orchestrator;
+package com.ast.mock.orchestrator.stub;
 
 import com.cobiscorp.cobis.cts.domains.sp.IResultSetData;
 import com.cobiscorp.cobis.cts.domains.sp.IResultSetRow;
