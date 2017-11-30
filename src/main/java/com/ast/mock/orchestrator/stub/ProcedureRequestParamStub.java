@@ -5,29 +5,31 @@ import com.cobiscorp.cobis.cts.domains.sp.IResultSetBlock;
 
 public class ProcedureRequestParamStub implements IProcedureRequestParam {
 	String name;
-	int ioType;
+	int ioType; // 0 = entrada ; 1 = salida
 	int dataType;
 	int len;
 	String value;
 	IResultSetBlock resultSetValue;
 
-	public ProcedureRequestParamStub(String name, int ioType, int dataType, int len, String value) {
-		this.name = name;
-		this.ioType = ioType;
-		this.dataType = dataType;
-		this.len = len;
-		this.value = value;
-	}
+	/* Valores posibles de ioType */
+	static final int OUT = 1;
+	static final int IN = 0;
 
-	public ProcedureRequestParamStub(String name, IResultSetBlock resultSetValue) {
+	private ProcedureRequestParamStub(String name, IResultSetBlock resultSetValue) {
 		this.name = name;
 		this.resultSetValue = resultSetValue;
+		this.ioType = OUT;
 	}
 
-	public ProcedureRequestParamStub(String name, int ioType, String value) {
-		this.name = name;
-		this.ioType = ioType;
-		this.value = value;
+	/**
+	 * Nuevo parametro de tipo resultset.
+	 * @param name Nombre
+	 * @param resultSetValue Valor
+	 * @return Nuevo parametro resultset.
+	 */
+	public static ProcedureRequestParamStub newResultsetParam(String name, IResultSetBlock resultSetValue) {
+		ProcedureRequestParamStub procedureRequestParamStub = new ProcedureRequestParamStub(name, resultSetValue);
+		return procedureRequestParamStub;
 	}
 
 	private ProcedureRequestParamStub(String name, int ioType, int dataType, int len, String value, IResultSetBlock resultSetValue) {
@@ -37,6 +39,30 @@ public class ProcedureRequestParamStub implements IProcedureRequestParam {
 		this.len = len;
 		this.value = value;
 		this.resultSetValue = resultSetValue;
+	}
+
+	/**
+	 * Crea un nuevo parametro de entrada.
+	 * @param name Nombre
+	 * @param dataType Tipo de dato
+	 * @param len Longitud del valor
+	 * @param value Valor del dato
+	 * @return Nuevo parametro de entrada.
+	 */
+	public static ProcedureRequestParamStub newInputParam(String name, int dataType, int len, String value) {
+		return new ProcedureRequestParamStub(name, IN, dataType, len, value, null);
+	}
+
+	/**
+	 * Crea un nuevo parametro de salida.
+	 * @param name Nombre
+	 * @param dataType Tipo de dato
+	 * @param len Longitud del valor
+	 * @param value Valor del dato
+	 * @return Nuevo parametro de salida.
+	 */
+	public static ProcedureRequestParamStub newOutputParam(String name, int dataType, int len, String value) {
+		return new ProcedureRequestParamStub(name, OUT, dataType, len, value, null);
 	}
 
 	public int getIOType() {

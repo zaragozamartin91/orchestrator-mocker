@@ -26,22 +26,24 @@ public class ProcedureRequestStub implements IProcedureRequest {
 	}
 
 	public void addParam(String name, int ioType, int dataType, int len, String value) {
-		IProcedureRequestParam procedureRequestParam = new ProcedureRequestParamStub(name, ioType, dataType, len, value);
+		IProcedureRequestParam procedureRequestParam = ioType == ProcedureRequestParamStub.IN ?
+				ProcedureRequestParamStub.newInputParam(name, dataType, len, value) :
+				ProcedureRequestParamStub.newOutputParam(name, dataType, len, value);
 		procedureRequestParamMap.put(name, procedureRequestParam);
 	}
 
 	public void addResultSetParam(String name, IResultSetBlock iResultSetBlock) {
-		IProcedureRequestParam procedureRequestParam = new ProcedureRequestParamStub(name, iResultSetBlock);
+		IProcedureRequestParam procedureRequestParam = ProcedureRequestParamStub.newResultsetParam(name, iResultSetBlock);
 		procedureRequestParamMap.put(name, procedureRequestParam);
 	}
 
 	public void addInputParam(String name, int type, String value) {
-		IProcedureRequestParam procedureRequestParam = new ProcedureRequestParamStub(name, type, value);
+		IProcedureRequestParam procedureRequestParam = ProcedureRequestParamStub.newInputParam(name, type, value.length(), value);
 		procedureRequestParamMap.put(name, procedureRequestParam);
 	}
 
 	public void addOutputParam(String name, int type, String value) {
-		IProcedureRequestParam procedureRequestParam = new ProcedureRequestParamStub(name, type, value);
+		IProcedureRequestParam procedureRequestParam = ProcedureRequestParamStub.newOutputParam(name, type, value.length(), value);
 		procedureRequestParamMap.put(name, procedureRequestParam);
 	}
 
@@ -66,7 +68,7 @@ public class ProcedureRequestStub implements IProcedureRequest {
 	}
 
 	public String getProcedureRequestAsString() {
-		return null;
+		throw new UnsupportedOperationException("Operacion no soportada por el stub");
 	}
 
 	public IProcedureRequest clone() {
@@ -98,12 +100,21 @@ public class ProcedureRequestStub implements IProcedureRequest {
 	}
 
 	public String getCTSMessageAsString() {
-		return null;
+		throw new UnsupportedOperationException("Operacion no soportada por el stub");
 	}
 
 	public Collection getFields() {
 		// TODO : ES CORRECTO ?
 		return headerFieldMap.values();
+	}
+
+	/* Setters para el builder */
+	public void setProcedureRequestParamMap(Map<String, IProcedureRequestParam> procedureRequestParamMap) {
+		this.procedureRequestParamMap = new HashMap<String, IProcedureRequestParam>(procedureRequestParamMap);
+	}
+
+	public void setHeaderFieldMap(Map<String, IHeaderField> headerFieldMap) {
+		this.headerFieldMap = new HashMap<String, IHeaderField>(headerFieldMap);
 	}
 
 	@Override

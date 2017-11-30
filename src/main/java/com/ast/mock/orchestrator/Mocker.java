@@ -1,8 +1,10 @@
 package com.ast.mock.orchestrator;
 
+import com.ast.mock.orchestrator.stub.HeaderFieldStub;
 import com.ast.mock.orchestrator.stub.ProcedureRequestStub;
 import com.ast.mock.orchestrator.stub.ResultSetHeaderStub;
 import com.ast.mock.orchestrator.stub.ResultSetRowStub;
+import com.cobiscorp.cobis.cts.domains.IHeaderField;
 import com.cobiscorp.cobis.cts.domains.IProcedureRequest;
 import com.cobiscorp.cobis.cts.domains.sp.IResultSetHeader;
 import com.cobiscorp.cobis.cts.domains.sp.IResultSetRow;
@@ -17,6 +19,18 @@ public class Mocker {
 	public IProcedureRequest procedureRequest() {
 		IProcedureRequest procedureRequest = new ProcedureRequestStub();
 		return procedureRequest;
+	}
+
+	/**
+	 * Crea un stub de un campo header.
+	 *
+	 * @param name  Nombre.
+	 * @param type  Tipo.
+	 * @param value Valor.
+	 * @return Nueva instancia de campo header.
+	 */
+	public IHeaderField headerField(String name, char type, String value) {
+		return new HeaderFieldStub(name, type, value);
 	}
 
 	/**

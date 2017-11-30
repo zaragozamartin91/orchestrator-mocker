@@ -49,6 +49,9 @@ artifactory {
 apply plugin: 'java'
 apply plugin: 'maven-publish'
 
+//task wrapper(type: Wrapper) {
+//    gradleVersion = '4.2.1'
+//}
 
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
