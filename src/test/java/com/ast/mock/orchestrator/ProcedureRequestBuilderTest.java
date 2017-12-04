@@ -76,4 +76,19 @@ public class ProcedureRequestBuilderTest {
 				.build();
 
 	}
+
+	@Test
+	public void addParam() throws Exception {
+		int name = 1;
+		int value = 1;
+		IProcedureRequest procedureRequest = ProcedureRequestBuilder.buildNew()
+				.addParam("name_" + (name++), 1, 2, 3, "value_" + (value++))
+				.addParam("name_" + (name++), 1, 2, 3, "value_" + (value++))
+				.addParam("name_" + (name++), 1, 2, 3, "value_" + (value++))
+				.build();
+
+		assertEquals("value_1", procedureRequest.readValueParam("name_1"));
+		assertEquals("value_2", procedureRequest.readValueParam("name_2"));
+		assertEquals("value_3", procedureRequest.readValueParam("name_3"));
+	}
 }

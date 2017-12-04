@@ -79,6 +79,31 @@ public class OrchestratorMocker {
 	}
 
 	/**
+	 * Crea una llamada mock de {@link Orchestrator#runSp(SpData)} que lanza una excepcion al recibir un spdata determinado.
+	 *
+	 * @param exception Excepcion a lanzar.
+	 * @param spdata    Spdata input.
+	 * @return this.
+	 * @throws BaseException No deberia ocurrir.
+	 */
+	public OrchestratorMocker stubRunSpAndThrow(Class<? extends Throwable> exception, SpData spdata) throws BaseException {
+		doThrow(exception).when(orch).runSp(spdata);
+		return this;
+	}
+
+	/**
+	 * Crea una llamada mock de {@link Orchestrator#runSp(SpData)} que lanza una excepcion al recibir cualquier tipo de input.
+	 *
+	 * @param exception Excepcion a lanzar.
+	 * @return this.
+	 * @throws BaseException No deberia ocurrir.
+	 */
+	public OrchestratorMocker stubRunSpAndThrowWithAnyInput(Class<? extends Throwable> exception) throws BaseException {
+		doThrow(exception).when(orch).runSp(any(SpData.class));
+		return this;
+	}
+
+	/**
 	 * Crea una llamada mock de {@link Orchestrator#runConnector(ConnectorData)}
 	 *
 	 * @param connectorData  Dato de entrada.
@@ -112,7 +137,7 @@ public class OrchestratorMocker {
 	 * Crea una llamada mock de {@link Orchestrator#initProcedureRequest(IProcedureRequest)}.
 	 *
 	 * @param outProcedureRequest Salida que se espera luego de invocarlo.
-	 * @param  nextRequests Siguientes requests de salida esperados.
+	 * @param nextRequests        Siguientes requests de salida esperados.
 	 * @return this.
 	 */
 	public OrchestratorMocker stubInitProcedureRequestMulti(IProcedureRequest outProcedureRequest, IProcedureRequest... nextRequests) {

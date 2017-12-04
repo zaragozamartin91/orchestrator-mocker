@@ -49,9 +49,9 @@ artifactory {
 apply plugin: 'java'
 apply plugin: 'maven-publish'
 
-//task wrapper(type: Wrapper) {
-//    gradleVersion = '4.2.1'
-//}
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.2.1'
+}
 
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
@@ -99,7 +99,6 @@ dependencies {
     compile('com.cobiscorp.cobis.cis:sp-java-orchestration-base-simple:1.0.0') {
         transitive = false
     }
-
 
 }
 

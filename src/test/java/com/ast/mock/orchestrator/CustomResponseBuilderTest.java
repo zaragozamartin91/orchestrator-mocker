@@ -89,4 +89,13 @@ public class CustomResponseBuilderTest {
 			}
 		}
 	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void buildFailOnWrongArgTypes() throws Exception {
+		CustomResponseBuilder.buildNew()
+				.withResultset()
+				.withRsMetadata("value1", "value2", "value3")
+				.addRs()
+				.build();
+	}
 }
