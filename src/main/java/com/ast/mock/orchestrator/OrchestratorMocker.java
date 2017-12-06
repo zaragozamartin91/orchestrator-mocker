@@ -22,7 +22,8 @@ import static org.mockito.Mockito.*;
  * llamado org.mockito.plugins.MockMaker en la carpeta src/test/resources.
  */
 public class OrchestratorMocker {
-	Orchestrator orch;
+	private Orchestrator orch;
+	private Configurator configuratorMock;
 
 	private OrchestratorMocker(Orchestrator orch) {
 		this.orch = orch;
@@ -35,6 +36,7 @@ public class OrchestratorMocker {
 	 * @return Orquestador stub.
 	 */
 	public static OrchestratorMocker stub(Orchestrator regularOrchestrator) {
+		Configurator configuratorMock;
 		try {
 			/* Hago un mock del logger y lo seteo al orquestador para evitar Nullpointer exceptions */
 			Field loggerField = Orchestrator.class.getDeclaredField("logger");
@@ -42,12 +44,21 @@ public class OrchestratorMocker {
 			ILogger loggerMock = mock(ILogger.class);
 			loggerField.set(regularOrchestrator, loggerMock);
 
+			Field configuratorField = Orchestrator.class.getDeclaredField("configurator");
+			configuratorField.setAccessible(true);
+			configuratorMock = mock(Configurator.class);
+			when(configuratorMock.get("FAFAFA")).thenReturn("1234");
+			configuratorField.set(regularOrchestrator, configuratorMock);
 		} catch (Exception e) {
 			throw new IllegalStateException("No es posible hacer un stub del campo logger");
 		}
 
 		Orchestrator spyOrch = spy(regularOrchestrator);
-		return new OrchestratorMocker(spyOrch);
+		OrchestratorMocker orchestratorMocker = new OrchestratorMocker(spyOrch);
+
+		orchestratorMocker.configuratorMock = configuratorMock;
+
+		return orchestratorMocker;
 	}
 
 	/**
@@ -204,6 +215,19 @@ public class OrchestratorMocker {
 		} else {
 			doReturn(firstResponse, nextResponses).when(orch).initProcedureResponse(any(IProcedureRequest.class));
 		}
+		return this;
+	}
+
+	/**
+	 * Crea un stub para la una clave de la configuracion.
+	 *
+	 * @param key   Clave de la configuracion del orquestador.
+	 * @param value Valor a retornar.
+	 * @return this
+	 * @throws Exception Excepcion delegada de {@link Configurator#get(String)}
+	 */
+	public OrchestratorMocker stubConfigurationGet(String key, String value) throws Exception {
+		when(configuratorMock.get(key)).thenReturn(value);
 		return this;
 	}
 

@@ -12,6 +12,7 @@ import com.cobiscorp.cobis.cts.domains.sp.IResultSetBlock;
 import org.junit.Test;
 
 import java.util.Collection;
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 
@@ -221,4 +222,23 @@ public class OrchestratorMockerTest {
 		assertEquals(expRes_2, res_2);
 	}
 
+	@Test
+	public void configurationGet() throws Exception {
+		String key = "key";
+		String value = "value";
+		Orchestrator orchestrator = OrchestratorMocker.stub(new ConfigurableOrchestrator())
+				.stubConfigurationGet(key, value)
+				.stubConfigurationGet("key_2", "value_2")
+				.get();
+
+		IProcedureRequest procreq = ProcedureRequestBuilder.buildNew().build();
+		{
+			CustomResponse customResponse = orchestrator.run(procreq, Collections.singletonMap("key", (Object) "key"));
+			assertEquals("value", customResponse.getMessages().get(0).getMessageText());
+		}
+		{
+			CustomResponse customResponse = orchestrator.run(procreq, Collections.singletonMap("key", (Object) "key_2"));
+			assertEquals("value_2", customResponse.getMessages().get(0).getMessageText());
+		}
+	}
 }

@@ -2,6 +2,8 @@ package com.ast.mock.orchestrator;
 
 import com.ast.mock.orchestrator.stub.MessageBlockStub;
 import com.ast.orchestration.base.data.CustomResponse;
+import com.ast.orchestration.base.data.OutputData;
+import com.cobiscorp.cobis.cts.domains.ICTSTypes;
 import com.cobiscorp.cobis.cts.domains.IMessageBlock;
 import com.cobiscorp.cobis.cts.domains.sp.IResultSetBlock;
 
@@ -26,6 +28,22 @@ public class CustomResponseBuilder {
 	public CustomResponseBuilder withMessage(int number, String text, int type) {
 		IMessageBlock message = new MessageBlockStub(number, text, type);
 		customResponse.getMessages().add(message);
+		return this;
+	}
+	
+	
+	/**
+	 * Agrega un output a la respuesta.
+	 * 
+	 * @param name Nombre de la variable.
+	 * @param type Tipo de dato de la variable {@link ICTSTypes}.
+	 * @param len  Longitud de la variable.
+	 * @param value Valor de la variable.
+	 * @return this.
+	 */
+	public CustomResponseBuilder withOutput(String name, int type, int len, String value) {
+		OutputData output = new OutputData(name, type, len, value);
+		customResponse.getOutputList().add(output);
 		return this;
 	}
 
