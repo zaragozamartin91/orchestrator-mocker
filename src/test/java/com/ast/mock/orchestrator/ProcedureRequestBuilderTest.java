@@ -91,4 +91,23 @@ public class ProcedureRequestBuilderTest {
 		assertEquals("value_2", procedureRequest.readValueParam("name_2"));
 		assertEquals("value_3", procedureRequest.readValueParam("name_3"));
 	}
+
+	@Test
+	public void buildFull() throws Exception {
+		int idx = 1;
+		IProcedureRequest procedureRequest = ProcedureRequestBuilder.buildNew()
+				.addOutputParam("name_" + idx, idx, "value_" + idx++)
+				.addInputParam("name_" + idx, idx, "value_" + idx++)
+				.setValueParam("name_2", "SPECIALVALUE")
+				.setSpName("SOME_SP")
+				.addFieldInHeader("name_" + idx, 't', "value_" + idx++)
+				.setValueFieldInHeader("name_3", "HEADERVALUE")
+				.build();
+
+		assertEquals("value_1", procedureRequest.readValueParam("name_1"));
+		assertEquals("SPECIALVALUE", procedureRequest.readValueParam("name_2"));
+		assertEquals("SOME_SP", procedureRequest.getSpName());
+		assertEquals("HEADERVALUE", procedureRequest.readValueFieldInHeader("name_3"));
+		assertEquals(2, procedureRequest.getParams().size());
+	}
 }

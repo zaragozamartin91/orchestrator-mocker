@@ -1,5 +1,6 @@
 package com.ast.mock.orchestrator;
 
+import com.ast.orchestration.base.config.Configurator;
 import com.ast.orchestration.base.data.ConnectorData;
 import com.ast.orchestration.base.data.CustomResponse;
 import com.ast.orchestration.base.data.SpData;
@@ -40,6 +41,7 @@ public class OrchestratorMocker {
 			loggerField.setAccessible(true);
 			ILogger loggerMock = mock(ILogger.class);
 			loggerField.set(regularOrchestrator, loggerMock);
+
 		} catch (Exception e) {
 			throw new IllegalStateException("No es posible hacer un stub del campo logger");
 		}

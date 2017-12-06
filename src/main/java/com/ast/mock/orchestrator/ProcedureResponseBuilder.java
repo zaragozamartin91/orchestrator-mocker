@@ -4,6 +4,9 @@ import com.ast.mock.orchestrator.stub.ProcedureResponseStub;
 import com.cobiscorp.cobis.cts.domains.IResponseBlock;
 import com.cobiscorp.cobis.cts.domains.sp.IResultSetBlock;
 
+/**
+ * Constructor de {@link ProcedureResponseStub}
+ */
 public class ProcedureResponseBuilder {
 	private ProcedureResponseStub procedureResponseStub = new ProcedureResponseStub();
 

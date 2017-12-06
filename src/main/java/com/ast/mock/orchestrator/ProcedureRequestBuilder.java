@@ -13,11 +13,10 @@ import java.util.Map;
  * Constructor de requests.
  */
 public class ProcedureRequestBuilder {
-	private static ProcedureRequestBuilder ourInstance = new ProcedureRequestBuilder();
 	private ProcedureRequestStub procedureRequest = new ProcedureRequestStub();
 
 	public static ProcedureRequestBuilder buildNew() {
-		return ourInstance;
+		return new ProcedureRequestBuilder();
 	}
 
 	private ProcedureRequestBuilder() { }
@@ -53,6 +52,11 @@ public class ProcedureRequestBuilder {
 
 	public ProcedureRequestBuilder setSpName(String spName) {
 		procedureRequest.setSpName(spName);
+		return this;
+	}
+
+	public ProcedureRequestBuilder addFieldInHeader(String name, char type, String value) {
+		procedureRequest.addFieldInHeader(name, type, value);
 		return this;
 	}
 

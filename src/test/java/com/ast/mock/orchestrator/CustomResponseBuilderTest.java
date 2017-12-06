@@ -28,6 +28,7 @@ public class CustomResponseBuilderTest {
 		int retCode = 999;
 
 		/* Creo un custom response que tenga dos mensajes y dos resultsets */
+		int exptype = 456;
 		CustomResponse customResponse = CustomResponseBuilder.buildNew()
 				.withMessage(number, text, type)
 				.withMessage(number_2, text_2, type_2)
@@ -58,6 +59,7 @@ public class CustomResponseBuilderTest {
 						"val_" + (val++), "val_" + (val++), "val_" + (val++),
 						"val_" + (val++), "val_" + (val++), "val_" + (val++)
 				)
+				.withRsType(exptype)
 				.addRs()
 
 				.withReturnCode(retCode)
@@ -88,6 +90,8 @@ public class CustomResponseBuilderTest {
 				assertEquals("val_" + (val++), row.getRowData(colIdx).getValue());
 			}
 		}
+
+		assertEquals(exptype, customResponse.getResultsetList().get(1).getType());
 	}
 
 	@Test(expected = IllegalArgumentException.class)

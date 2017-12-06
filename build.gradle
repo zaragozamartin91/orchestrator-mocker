@@ -36,12 +36,12 @@ artifactory {
     }
 
     resolve {
-        contextUrl = ARTIFACTORY_BASE_URL   //The base Artifactory URL for the resolver
+        contextUrl = ARTIFACTORY_BASE_URL       //The base Artifactory URL for the resolver
         repository {
             repoKey = 'libs-release'
-            username = ARTIFACTORY_USERNAME          //Optional resolver user name (leave out to use anonymous resolution)
-            password = ARTIFACTORY_PASSWORD       //The resolver password
-            maven = true                //Resolve Maven-style artifacts and descriptors (true by default)
+            username = ARTIFACTORY_USERNAME     //Optional resolver user name (leave out to use anonymous resolution)
+            password = ARTIFACTORY_PASSWORD     //The resolver password
+            maven = true                        //Resolve Maven-style artifacts and descriptors (true by default)
         }
     }
 }
@@ -65,22 +65,13 @@ repositories {
         url "${ARTIFACTORY_BASE_URL}/libs-release"
     }
 
-//    maven {
-//        url "http://jcenter.bintray.com"
-//    }
-
     mavenLocal()
-
 }
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
     compile 'org.mockito:mockito-core:2.8.47'
-//    compile 'com.cobiscorp.cobis:cobis-commons:1.0.2'
-//    compile 'com.cobiscorp.cobis.cis:sp-java-orchestration-base-simple:1.0.0'
-//    compile 'ast.csp.orchestration:ast-csp-orchestration-base:2.0.0'
-//    compile 'com.cobiscorp.cobis.cts:cts-commons:1.0.7'
 
     compile 'com.cobiscorp.cobis:cobis-commons:1.0.1'
     compile 'com.cobiscorp.cobis.cts:cts-commons:1.0.7'
@@ -91,8 +82,6 @@ dependencies {
     compile 'cobis:cobis-crypt-impl:1.0.0'
     compile 'cobis:cobis-crypt-native:1.0.0'
     compile 'ast.csp.orchestration:ast-csp-orchestration-base:2.0.0'
-
-//    compile 'com.cobiscorp.cobis.cis:sp-java-orchestration-base-simple:1.0.0'
 
     /* Se eliminan las dependencias transitivas para esta dependencia dado que la misma depende de una version
      * de cobis-commons que no se encuentra (1.0.3) */
@@ -120,6 +109,7 @@ publishing {
     }
 }
 
+/* Configuro el task de publicacion de artefactos en ARTIFACTORY */
 artifactoryPublish {
     skip = false //Skip build info analysis and publishing (false by default)
     contextUrl = ARTIFACTORY_BASE_URL
@@ -129,8 +119,6 @@ artifactoryPublish {
     clientConfig.publisher.repoKey = 'ext-snapshot-local'
     clientConfig.publisher.username = ARTIFACTORY_USERNAME
     clientConfig.publisher.password = ARTIFACTORY_PASSWORD
-
-
 }
 
 jar.dependsOn(sourceJar)
