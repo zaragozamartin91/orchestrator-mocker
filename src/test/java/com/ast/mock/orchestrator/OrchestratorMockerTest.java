@@ -5,19 +5,57 @@ import com.ast.orchestration.base.data.ConnectorData;
 import com.ast.orchestration.base.data.CustomResponse;
 import com.ast.orchestration.base.data.SpData;
 import com.ast.orchestration.base.impl.Orchestrator;
+import com.cobiscorp.cobis.cts.domains.IMessageBlock;
 import com.cobiscorp.cobis.cts.domains.IProcedureRequest;
+import com.cobiscorp.cobis.cts.domains.IProcedureResponse;
 import com.cobiscorp.cobis.cts.domains.sp.IResultSetBlock;
 import org.junit.Test;
+
+import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
 
 public class OrchestratorMockerTest {
 	@Test
 	public void stubRunSp() throws Exception {
+		IProcedureRequest req = ProcedureRequestBuilder.buildNew()
+				.addInputParam("key_1", 2, "pepe")
+				.build();
+		SpData spdata = new SpData(req, "database", "somesp", "1234");
+		CustomResponse response = CustomResponseBuilder.buildNew()
+				.withReturnCode(4)
+				.withMessage(12, "message", 45)
+				.build();
+		Orchestrator orchestrator = OrchestratorMocker.stub(new OrchestratorStub())
+				.stubRunSp(spdata, response)
+				.get();
+
+		CustomResponse response1 = orchestrator.runSp(spdata);
+		assertEquals(response, response1);
 	}
 
 	@Test
 	public void stubRunSp1() throws Exception {
+		IProcedureRequest req = ProcedureRequestBuilder.buildNew()
+				.addInputParam("key_1", 2, "pepe")
+				.build();
+		SpData spdata = new SpData();
+		CustomResponse stubResponse1 = CustomResponseBuilder.buildNew()
+				.withReturnCode(4)
+				.withMessage(12, "message", 45)
+				.build();
+		CustomResponse stubResponse2 = CustomResponseBuilder.buildNew()
+				.withReturnCode(5)
+				.withMessage(13, "message_2", 46)
+				.build();
+		Orchestrator orchestrator = OrchestratorMocker.stub(new OrchestratorStub())
+				.stubRunSp(stubResponse1, stubResponse2)
+				.get();
+
+		CustomResponse expResponse1 = orchestrator.runSp(spdata);
+		CustomResponse expResponse2 = orchestrator.runSp(spdata);
+		assertEquals(stubResponse1, expResponse1);
+		assertEquals(stubResponse2, expResponse2);
 	}
 
 	@Test
@@ -110,10 +148,77 @@ public class OrchestratorMockerTest {
 
 	@Test
 	public void stubInitProcedureResponse() throws Exception {
+		IProcedureRequest request = ProcedureRequestBuilder.buildNew()
+				.addInputParam("name", 7, "value")
+				.addInputParam("name_2", 8, "value_2")
+				.build();
+
+		IResultSetBlock resultset = ResultSetBuilder.buildNew()
+				.withMetadata(
+						"uno", 1, 1,
+						"dos", 2, 2
+				)
+				.withData(
+						"hola", "como",
+						"estas", "todo",
+						"bien", "asd"
+				)
+				.build();
+
+		int msg = 1;
+		IProcedureResponse expRes = ProcedureResponseBuilder.buildNew()
+				.withMessage(msg, "msg_" + msg++)
+				.withMessage(msg, "msg_" + msg++)
+				.withReturnCode(999)
+				.withResultset(resultset)
+				.withParam("param", 1, 5, "holam")
+				.build();
+
+		int idx = 1;
+		Collection<IMessageBlock> messages = expRes.getMessages();
+		for (IMessageBlock message : messages) {
+			assertEquals(idx, message.getMessageNumber());
+			assertEquals("msg_" + idx++, message.getMessageText());
+		}
+
+		assertEquals(1, expRes.getResultSetListSize());
+
+		Orchestrator orchestrator = OrchestratorMocker.stub(new OrchestratorStub())
+				.stubInitProcedureResponse(request, expRes)
+				.get();
+
+		IProcedureResponse res = orchestrator.initProcedureResponse(request);
+
+		assertEquals(expRes, res);
 	}
 
 	@Test
 	public void stubInitProcedureResponse1() throws Exception {
+		IProcedureRequest request = ProcedureRequestBuilder.buildNew().build();
+
+		int msg = 1;
+		IProcedureResponse expRes_1 = ProcedureResponseBuilder.buildNew()
+				.withMessage(msg, "msg_" + msg++)
+				.withMessage(msg, "msg_" + msg++)
+				.withReturnCode(999)
+				.withParam("param", 1, 5, "holam")
+				.build();
+		IProcedureResponse expRes_2 = ProcedureResponseBuilder.buildNew()
+				.withMessage(msg, "msg_" + msg++)
+				.withMessage(msg, "msg_" + msg++)
+				.withReturnCode(999)
+				.withParam("param", 1, 5, "holam")
+				.build();
+
+		Orchestrator orchestrator = OrchestratorMocker.stub(new OrchestratorStub())
+				.stubInitProcedureResponse(expRes_1, expRes_2)
+				.get();
+
+		IProcedureResponse res_1 = orchestrator.initProcedureResponse(request);
+		IProcedureResponse res_2 = orchestrator.initProcedureResponse(request);
+
+		assertEquals(expRes_1, res_1);
+		assertEquals(expRes_2, res_2);
 	}
 
 }

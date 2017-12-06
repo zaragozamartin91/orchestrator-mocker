@@ -68,7 +68,7 @@ public class ProcedureRequestStub implements IProcedureRequest {
 	}
 
 	public String getProcedureRequestAsString() {
-		throw new UnsupportedOperationException("Operacion no soportada por el stub");
+		return this.toString();
 	}
 
 	public IProcedureRequest clone() {
@@ -100,7 +100,7 @@ public class ProcedureRequestStub implements IProcedureRequest {
 	}
 
 	public String getCTSMessageAsString() {
-		throw new UnsupportedOperationException("Operacion no soportada por el stub");
+		return this.toString();
 	}
 
 	public Collection getFields() {
